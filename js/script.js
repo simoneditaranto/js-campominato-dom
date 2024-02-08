@@ -11,6 +11,9 @@
 // BONUS 1
 // Quando si clicca su una bomba e finisce la partita, evitare che si possa cliccare su altre celle.
 
+// BONUS 2
+// Quando si clicca su una bomba e finisce la partita, il software scopre tutte le bombe nascoste.
+
 
 // memorizzo il bottone "genera" che al click farà visualizzare la griglia
 buttonStartElement = document.querySelector("#start");
@@ -70,9 +73,9 @@ buttonStartElement.addEventListener("click",
 
         // creo un array di 16 numeri casuali (compresi tra 1 e "userDifficulty") che saranno i numeri che contengolo le bombe
         const randomBombsArray = getRandomNumbersArrys(16, userDifficulty);
-        console.log(randomBombsArray);
-        // test
 
+        // memorizzo in un array tutti gli elementi che creo
+        const newElementsArray = [];
 
         // creazione griglia "userDifficulty" x "userDifficulty"
         for(let i = 0; i < userDifficulty; i++) {
@@ -81,12 +84,9 @@ buttonStartElement.addEventListener("click",
             const newElement = document.createElement("div");
             newElement.classList.add("square");
             newElement.innerText = randomNumbersArray[i];
-
-            // TEST (VISUALIZZO IN PAGINA LE BOMBE)
-            if(randomBombsArray.includes(randomNumbersArray[i])) {
-                newElement.style.backgroundColor = "yellowgreen";
-            }
-            // FINE TEST __________________________
+            
+            // aggiungo l'elemento al mio array
+            newElementsArray.push(newElement);
 
             newElement.addEventListener("click", 
             function() {
@@ -99,6 +99,10 @@ buttonStartElement.addEventListener("click",
 
                     // se presente coloro la casella di rosso
                     this.classList.add("bomb");
+
+                    // chiamo la funzione che controlla le bombe per colorare di rosso tutte le caselle con le bombe
+                    controlArrayNumbers(newElementsArray, randomBombsArray, "bomb");
+
                     // aggiorno il controllo 
                     isWinning = false;
                     // rendo non più cliccabile la griglia
@@ -117,14 +121,8 @@ buttonStartElement.addEventListener("click",
                     // coloro la casella di azzurrino
                     this.classList.add("active");
 
-                    console.log("userScore", userScore);
-
                 }
                 
-                // al click stampo il contenuto del mio elemento
-                console.log(this.innerText);
-
-
                 // se ho preso una bomba oppure se ho cliccato tutte le caselle giuste, stampo il risultato
                 if(!isWinning) {
 
@@ -180,5 +178,22 @@ function getRandomNumbersArrys(arrayLenght, randomLimit) {
 
     // ritorno il mio array
     return numbersArray;
+
+}
+
+// dichiaro una funzione che controlla quali elementi ci sono in comune tra 2 array e a quelli in comune aggiungo una classe
+function controlArrayNumbers(firstArray, secondArray, nameClass) {
+
+    // firstArray è un array di elementi html
+    // secondArray è un array di numeri
+
+    for(let i = 0; i < firstArray.length; i++) {
+
+        if(secondArray.includes(Number(firstArray[i].innerText))) {
+        
+            firstArray[i].classList.add(nameClass);
+        }
+
+    }
 
 }
