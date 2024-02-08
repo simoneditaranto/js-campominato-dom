@@ -50,20 +50,19 @@ buttonStartElement.addEventListener("click",
         // in base alla scelta dell'utente decido quante celle devo visualizzare in pagina
         // il valore sarà il numero di iterazioni del ciclo for
         let userDifficulty = 100; // valore di default
+        // variabile che mi serve per dare la grandezza agli elementi che creo successivamente
+        let dimension;
         if(difficultyElement.value == 2) {
 
             userDifficulty = 81;
-            document.querySelector(".container").className = "container medium";
+            dimension = "medium"; // nome della classe css
 
         } else if(difficultyElement.value == 3) {
 
             userDifficulty = 49;
-            document.querySelector(".container").className = "container easy";
-        } else {
+            dimension = "small"; // nome della classe css
 
-            document.querySelector(".container").className = "container";
-
-        }
+        } 
 
         // prendiamo la griglia 
         // utilizzando un ciclo for, per ogni iterazione creiamo una cella nella griglia
@@ -83,6 +82,7 @@ buttonStartElement.addEventListener("click",
             // creiamo l'elemtno
             const newElement = document.createElement("div");
             newElement.classList.add("square");
+            newElement.classList.add(dimension);
             newElement.innerText = randomNumbersArray[i];
             
             // aggiungo l'elemento al mio array
