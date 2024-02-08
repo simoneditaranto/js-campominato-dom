@@ -8,6 +8,9 @@
 
 // Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l’utente ha cliccato su una cella che non era una bomba.
 
+// BONUS 1
+// Quando si clicca su una bomba e finisce la partita, evitare che si possa cliccare su altre celle.
+
 
 // memorizzo il bottone "genera" che al click farà visualizzare la griglia
 buttonStartElement = document.querySelector("#start");
@@ -24,17 +27,22 @@ buttonStartElement.addEventListener("click",
 
         // memorizzo l'elemento griglia ("grid") 
         const gridElement = document.querySelector("#grid");
-
+        
         // ad ogni pressione del button, il contenuto della griglia si deve azzerare
         gridElement.innerHTML = "";
         // ad ogni pressione del button, svuoto il contenuto della console
         console.clear();
-
+        
         // memorizzo in una variabile il punteggio dell'utente, viene resettato a 0 ad ogni nuova partita
         let userScore = 0;
 
+        // memorizzo l'elemento che stamperà il risultato a schermo
+        const resultElement  = document.querySelector("#result");
         // ad ogni nuova partita l'elemento nel DOM che stampa il risultato non deve essere visibile
-        document.getElementById("result").style.display = "none";
+        resultElement.style.display = "none";
+
+        // ad ogni nuova partita resetto il "pointer-events" della griglia
+        gridElement.classList.remove("no-events");
 
         // in base alla scelta dell'utente decido quante celle devo visualizzare in pagina
         // il valore sarà il numero di iterazioni del ciclo for
@@ -65,6 +73,7 @@ buttonStartElement.addEventListener("click",
         console.log(randomBombsArray);
         // test
 
+
         // creazione griglia "userDifficulty" x "userDifficulty"
         for(let i = 0; i < userDifficulty; i++) {
         
@@ -90,7 +99,10 @@ buttonStartElement.addEventListener("click",
 
                     // se presente coloro la casella di rosso
                     this.classList.add("bomb");
+                    // aggiorno il controllo 
                     isWinning = false;
+                    // rendo non più cliccabile la griglia
+                    gridElement.classList.add("no-events");
 
                 } else {
                     
@@ -112,15 +124,17 @@ buttonStartElement.addEventListener("click",
                 // al click stampo il contenuto del mio elemento
                 console.log(this.innerText);
 
+
                 // se ho preso una bomba oppure se ho cliccato tutte le caselle giuste, stampo il risultato
                 if(!isWinning) {
 
-                    document.getElementById("result").style.display = "flex";
-                    document.getElementById("result").innerText = `Hai perso, con un punteggio di ${userScore}`;
+                    resultElement.style.display = "flex";
+                    resultElement.innerText = `Hai perso, con un punteggio di ${userScore}`;
 
                 } else if(userScore == (randomNumbersArray.length - randomBombsArray.length)){
-                    document.getElementById("result").style.display = "flex";
-                    document.getElementById("result").innerText = `Hai VINTO, con un punteggio di ${userScore}`;
+                    gridElement.classList.add("no-events");
+                    resultElement.style.display = "flex";
+                    resultElement.innerText = `Hai VINTO, con un punteggio di ${userScore}`;
                 }
             }
             )

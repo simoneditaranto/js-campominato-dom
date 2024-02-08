@@ -45,6 +45,10 @@ h1{
     flex-wrap: wrap;
 }
 
+#grid.no-events{
+    pointer-events: none;
+}
+
 #grid .square{
     display: flex;
     justify-content: center;
@@ -88,4 +92,8 @@ h1{
     background-color: rgba(255, 0, 0, 0.7);
 
     color: rgb(255, 247, 0);
+}
+
+.try{
+    pointer-events: none;
 }
