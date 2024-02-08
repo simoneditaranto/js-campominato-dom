@@ -1,14 +1,11 @@
-// L'utente clicca su un bottone che genererà una griglia di gioco quadrata.
-// Ogni cella ha un numero progressivo, da 1 a 100.
-// Ci saranno quindi 10 caselle per ognuna delle 10 righe.
-// Quando l'utente clicca su ogni cella, la cella cliccata si colora di azzurro ed emetto un messaggio in console con il numero della cella cliccata.
+// Il computer deve generare 16 numeri casuali e inserirli in un array, in base al range della difficoltà prescelta (se abbiamo scelto facile l'array conterrà numeri casuali da 1 a 100, se invece abbiamo scelto difficile l'array dovrà contenerne da 1 a 49): questi rappreseranno le posizioni delle nostre bombe.
 
-// Bonus
-// Aggiungere una select accanto al bottone di generazione, che fornisca una scelta tra tre diversi livelli di difficoltà:
-// - con difficoltà 1 => 100 caselle, con un numero compreso tra 1 e 100, divise in 10 caselle per 10 righe;
-// - con difficoltà 2 => 81 caselle, con un numero compreso tra 1 e 81, divise in 9 caselle per 9 righe;
-// - con difficoltà 3 => 49 caselle, con un numero compreso tra 1 e 49, divise in 7 caselle per 7 righe;
-/*_______________________________________________________________________________________________________________________ */
+// Attenzione: nella stessa cella può essere posizionata al massimo una bomba, perciò nell’array delle bombe non potranno esserci due numeri uguali.
+
+// In seguito l'utente clicca su una cella: se il numero è presente nella lista dei numeri generati - abbiamo calpestato una bomba - la cella si colora di rosso e la partita termina. Altrimenti la cella cliccata si colora di azzurro e l'utente può continuare a cliccare sulle altre celle.
+
+// La partita termina quando il giocatore clicca su una bomba o quando raggiunge il numero massimo possibile di numeri consentiti (ovvero quando ha rivelato tutte le celle che non sono bombe).
+
 
 // memorizzo il bottone "genera" che al click farà visualizzare la griglia
 buttonStartElement = document.querySelector("#start");
@@ -33,24 +30,19 @@ buttonStartElement.addEventListener("click",
 
         // in base alla scelta dell'utente decido quante celle devo visualizzare in pagina
         // il valore sarà il numero di iterazioni del ciclo for
-        let userDifficulty = 100;
-        // valore di default
+        let userDifficulty = 100; // valore di default
         if(difficultyElement.value == 2) {
 
             userDifficulty = 81;
             document.querySelector(".container").className = "container medium";
-            // document.querySelector(".container").style.width = "900px";
 
         } else if(difficultyElement.value == 3) {
 
             userDifficulty = 49;
             document.querySelector(".container").className = "container easy";
-            // document.querySelector(".container").style.width = "700px";
-
         } else {
 
             document.querySelector(".container").className = "container";
-            // document.querySelector(".container").style.width = "1000px";
 
         }
 
@@ -58,7 +50,12 @@ buttonStartElement.addEventListener("click",
         // utilizzando un ciclo for, per ogni iterazione creiamo una cella nella griglia
 
         // creo poi un array di numeri casuali di lunghezza "userDifficulty" e ad ogni iterazione del ciclo qui sotto inserisco ad ogni cella come numero l'i-esimo elemento dell'array
-        const randomNumbersArray = getRandomNumbersArrys(userDifficulty);
+        const randomNumbersArray = getRandomNumbersArrys(userDifficulty, userDifficulty);
+
+        // creo un array di 16 numeri casuali (compresi tra 1 e "userDifficulty") che saranno i numeri che contengolo le bombe
+        const randomBombsArray = getRandomNumbersArrys(16, userDifficulty);
+        console.log(randomBombsArray);
+        // test
 
         // creazione griglia "userDifficulty" x "userDifficulty"
         for(let i = 0; i < userDifficulty; i++) {
@@ -71,8 +68,18 @@ buttonStartElement.addEventListener("click",
             newElement.addEventListener("click", 
                 function() {
 
-                    // al click aggiungo la classe .active (che colora di azzurrino la cella)
-                    this.classList.toggle("active");
+                    // al click controllo se il numero presente nella casella fa parte dell'array di bombe
+                    console.log(randomBombsArray.includes(Number(this.innerText)));
+                    // test
+                    if(randomBombsArray.includes(Number(this.innerText))) {
+                        // se presente coloro la casella di rosso
+                        this.classList.add("bomb");
+
+                    } else {
+                        // coloro la casella di azzurrino
+                        this.classList.add("active");
+                    }
+
                     // al click stampo il contenuto del mio elemento
                     console.log(this.innerText);
 
@@ -98,7 +105,7 @@ function generateRandomNumber(maxNumber) {
 }
 
 // funzione per generare un array di "arrayLenght" numeri casuali e diversi tra loro
-function getRandomNumbersArrys(arrayLenght) {
+function getRandomNumbersArrys(arrayLenght, randomLimit) {
 
     // inizializzo un array vuoto
     const numbersArray = [];
@@ -106,7 +113,7 @@ function getRandomNumbersArrys(arrayLenght) {
     while(numbersArray.length < arrayLenght) {
 
         // genero un numero casuale
-        const newNumber = generateRandomNumber(arrayLenght);
+        const newNumber = generateRandomNumber(randomLimit);
 
         // controllo se il numero è già presente nell'array
         if(!numbersArray.includes(newNumber)) {
