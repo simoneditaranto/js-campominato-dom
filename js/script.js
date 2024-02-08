@@ -6,6 +6,8 @@
 
 // La partita termina quando il giocatore clicca su una bomba o quando raggiunge il numero massimo possibile di numeri consentiti (ovvero quando ha rivelato tutte le celle che non sono bombe).
 
+// Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l’utente ha cliccato su una cella che non era una bomba.
+
 
 // memorizzo il bottone "genera" che al click farà visualizzare la griglia
 buttonStartElement = document.querySelector("#start");
@@ -19,6 +21,7 @@ buttonStartElement.addEventListener("click",
 
 
     function() {
+
         // memorizzo l'elemento griglia ("grid") 
         const gridElement = document.querySelector("#grid");
 
@@ -27,6 +30,11 @@ buttonStartElement.addEventListener("click",
         // ad ogni pressione del button, svuoto il contenuto della console
         console.clear();
 
+        // memorizzo in una variabile il punteggio dell'utente, viene resettato a 0 ad ogni nuova partita
+        let userScore = 0;
+
+        // ad ogni nuova partita l'elemento nel DOM che stampa il risultato non deve essere visibile
+        document.getElementById("result").style.display = "none";
 
         // in base alla scelta dell'utente decido quante celle devo visualizzare in pagina
         // il valore sarà il numero di iterazioni del ciclo for
@@ -65,25 +73,56 @@ buttonStartElement.addEventListener("click",
             newElement.classList.add("square");
             newElement.innerText = randomNumbersArray[i];
 
+            // TEST (VISUALIZZO IN PAGINA LE BOMBE)
+            if(randomBombsArray.includes(randomNumbersArray[i])) {
+                newElement.style.backgroundColor = "yellowgreen";
+            }
+            // FINE TEST __________________________
+
             newElement.addEventListener("click", 
-                function() {
+            function() {
 
-                    // al click controllo se il numero presente nella casella fa parte dell'array di bombe
-                    console.log(randomBombsArray.includes(Number(this.innerText)));
-                    // test
-                    if(randomBombsArray.includes(Number(this.innerText))) {
-                        // se presente coloro la casella di rosso
-                        this.classList.add("bomb");
+                // creo una variabile booleana che controlla se l'utente ha cliccato su una bomba
+                let isWinning = true;
+                
+                // al click controllo se il numero presente nella casella fa parte dell'array di bombe
+                if(randomBombsArray.includes(Number(this.innerText))) {
 
-                    } else {
-                        // coloro la casella di azzurrino
-                        this.classList.add("active");
-                    }
+                    // se presente coloro la casella di rosso
+                    this.classList.add("bomb");
+                    isWinning = false;
 
-                    // al click stampo il contenuto del mio elemento
-                    console.log(this.innerText);
+                } else {
+                    
+                    // controllo se la classe "active" non è già presente (cioè se la casella non è già stata cliccata)
+                    if(!this.classList.contains("active")) {
+
+                        // aumento il punteggio
+                        userScore++;
+
+                    } 
+
+                    // coloro la casella di azzurrino
+                    this.classList.add("active");
+
+                    console.log("userScore", userScore);
 
                 }
+                
+                // al click stampo il contenuto del mio elemento
+                console.log(this.innerText);
+
+                // se ho preso una bomba oppure se ho cliccato tutte le caselle giuste, stampo il risultato
+                if(!isWinning) {
+
+                    document.getElementById("result").style.display = "flex";
+                    document.getElementById("result").innerText = `Hai perso, con un punteggio di ${userScore}`;
+
+                } else if(userScore == (randomNumbersArray.length - randomBombsArray.length)){
+                    document.getElementById("result").style.display = "flex";
+                    document.getElementById("result").innerText = `Hai VINTO, con un punteggio di ${userScore}`;
+                }
+            }
             )
         
             gridElement.append(newElement);

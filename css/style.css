@@ -12,6 +12,8 @@ h1{
 }
 
 .container {
+    position: relative;
+
     margin: 0 auto;
 
     width: 1000px;
@@ -64,4 +66,26 @@ h1{
 
 #grid .square.bomb{
     background-color: red;
+}
+
+.container #result{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 45%;
+    height: 20%;
+
+    border-radius: 10px;
+
+    font-size: 2em;
+
+    background-color: rgba(255, 0, 0, 0.7);
+
+    color: rgb(255, 247, 0);
 }
