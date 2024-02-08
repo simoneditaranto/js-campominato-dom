@@ -84,6 +84,7 @@ buttonStartElement.addEventListener("click",
             newElement.classList.add("square");
             newElement.classList.add(dimension);
             newElement.innerText = randomNumbersArray[i];
+            newElement.style.color = "white";
             
             // aggiungo l'elemento al mio array
             newElementsArray.push(newElement);
